@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # $File: //member/autrijus/Lingua-Sinica-PerlYuYan/Makefile.PL $ $Author: autrijus $
-# $Revision: #1 $ $Change: 2906 $ $DateTime: 2002/01/21 23:35:10 $
+# $Revision: #2 $ $Change: 706 $ $DateTime: 2002/08/18 03:49:00 $
 
 require 5.005;
 
@@ -19,7 +19,7 @@ WriteMakefile(
     },
 
     dist		=> {
-        COMPRESS	=> 'gzip',
+        COMPRESS	=> 'gzip -9',
         SUFFIX		=> '.gz',
     },
 );

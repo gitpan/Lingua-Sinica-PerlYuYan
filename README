@@ -1,13 +1,15 @@
 # $File: //member/autrijus/Lingua-Sinica-PerlYuYan/README $ $Author: autrijus $
-# $Revision: #2 $ $Change: 2909 $ $DateTime: 2002/01/21 23:42:24 $
+# $Revision: #2 $ $Change: 706 $ $DateTime: 2002/08/18 03:49:00 $
 
-This is the README file for Lingua::Sinica::PerlYuYan, a Chinese
+This is the README file for Lingua::Sinica::PerlYuYan, a simple
+source filter that lets you write perl in Chinese.
 lacnauge-pack for perl.
 
 * Installation
 
 Lingua::Sinica::PerlYuYan uses the standard perl module install process:
 
+cpansign -v		# see SIGNATURE for details
 perl Makefile.PL
 make
 make test
@@ -15,7 +17,7 @@ make install
 
 * Copyright
 
-Copyright 2001 by Autrijus Tang <autrijus@autrijus.org>.
+Copyright 2001, 2002 by Autrijus Tang <autrijus@autrijus.org>.
 
 All rights reserved.  You can redistribute and/or modify
 this bundle under the same terms as Perl itself.
