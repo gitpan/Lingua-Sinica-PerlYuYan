@@ -1,3 +1,5 @@
+#!/usr/local/bin/perl
+
 use Lingua::Sinica::PerlYuYan;
 
 ¥ÎÄµ¤¼¥ÎÄY¡C
