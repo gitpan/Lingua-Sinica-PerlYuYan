@@ -6,7 +6,9 @@ use strict;
 use Filter::Simple::Compile;
 use Encode ();
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
+
+=encoding utf8
 
 =head1 NAME
 
@@ -52,10 +54,15 @@ while (<DATA>) {
     $_ = Encode::is_utf8($_) ? $_ : Encode::decode_utf8($_);
 
     next if /^\s*$/;
-    chomp; my $chi = <DATA>; chomp $chi;
-    $chi =~ s/[a-z]+//ig;
-    $chi =~ s/\s//g;
-    @Tab{ $chi =~ /(.)/g } = map { /^[a-z]+$/ ? "$_ " : $_ } split( /[\s\t]/, $_ );
+    my @eng = split ' ';
+    my @chi = map {/\A [!-~]+ \z/msx ? $_ : split //, $_}
+      # clusters of ASCII are untranslated keywords; keep them
+      split ' ', <DATA>;
+    for (my $i = 0; $i <= $#eng; $i++) {
+        next if $chi[$i] eq $eng[$i];    # filter untranslated
+        $Tab{$chi[$i]} =    # append space if keyword, but not single letter
+        $eng[$i] =~ /\A [a-z]{2,} \z/msx ? $eng[$i] . ' ' : $eng[$i];
+    }
 }
 
 @Tab{qw{ 資曰     亂曰    檔曰     列曰     套曰        }}
@@ -76,7 +83,7 @@ sub translate {
     my $code = shift;
 
     for my $key (sort {length $Tab{$b} cmp length $Tab{$a}} keys %Tab) {
-	$code =~ s/\Q$Tab{$key}\E/$key/g;
+        $code =~ s/\Q$Tab{$key}\E/$key/g;
     }
 
     return $code;
@@ -135,7 +142,7 @@ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 0 1 2 3 4 5 6 7 8 9
 ０１２３４５６７８９
 
-! @ # # $ % % ^ & * ( ) - = _ + + [ ] { } \ | ; : : 
+! @ # # $ % % ^ & * ( ) - = _ + + [ ] { } \ | ; : :
 非陣井註純雜模析和乘起合減賦底加正內外始終參聯兮然標
 ' ' " " , , => < . . > / / ? ` ` ~
 曰矣道哉又並與 小點接大除分歟行者繫
@@ -148,31 +155,40 @@ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 && == || and or lt gt cmp eq not
 及 等 許 且  或 前 後 較  同 否
 
-$/ $_ @_ "\x20" "\t" "\n" main
+=~ !~ x <=> ne ~~ //
+=~ !~ x <=> ne ~~ //
+
+<< >> <= >= le ge != ne xor
+<< >> <= >= le ge != ne xor
+
+**= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= //= x=
+**= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= //= x=
+
+$/ $_ @_ \x20   \t   \n    main
 段 此 諸 空     格   列   主
 
 STDIN STDOUT STDERR DATA BEGIN END INIT CHECK DESTROY
 入    出     誤     料   創    末  育   察    滅
 
 chomp chop chr crypt hex index lc lcfirst length oct ord pack q/ qq/ reverse
-截    斬   文  密    爻  索    纖 細      長     卦  序  包   引 雙  逆      
+截    斬   文  密    爻  索    纖 細      長     卦  序  包   引 雙  逆
 rindex sprintf substr tr/ uc ucfirst y/
-檢     編      部     轉  壯 厚      換 
+檢     編      部     轉  壯 厚      換
 
 m/ pos quotemeta s/ split study qr/
 符 位  逸        代 切    習    規
 
 abs atan2 cos exp hex int log oct rand sin sqrt srand
-絕  角    餘  階  爻  整  對  卦  亂   弦  根   騷    
+絕  角    餘  階  爻  整  對  卦  亂   弦  根   騷
 
 pop push shift splice unshift
-彈  推   取    抽     予      
+彈  推   取    抽     予
 
 grep join map qw/ reverse sort unpack
-篩   併   映  篇  逆      排   啟     
+篩   併   映  篇  逆      排   啟
 
 delete each exists keys values
-刪     每   存     鍵   值     
+刪     每   存     鍵   值
 
 binmode close closedir dbmclose dbmopen die eof fileno flock format getc
 法      閉    關       閤       揭      死  結  號     鎖    排     擷
@@ -182,42 +198,45 @@ sysread sysseek syswrite tell telldir truncate warn write
 鑑      狩      敕       告   訴      縮       訊   寫
 
 pack read unpack vec
-包   讀   啟     向 
+包   讀   啟     向
 
 chdir chmod chown chroot fcntl glob ioctl link lstat mkdir open opendir
 目    權    擁    遷     控    全   制    鏈   況    造    開   展
 readlink rename rmdir stat symlink umask unlink utime
 readlink 更     毀    態   symlink 蒙    鬆     刻
 
+say if else elsif until while until foreach given when default break
+say 倘 else elsif until 當 until foreach given when default break
+
 caller continue die do dump eval exit goto last next redo return sub wantarray
-喚     續       死  為 傾   執   離   躍   尾   次   重   回     副  欲        
+喚     續       死  為 傾   執   離   躍   尾   次   重   回     副  欲
 
 caller import local my our package use
-喚     導     域    吾 咱  套      用  
+喚     導     域    吾 咱  套      用
 
 defined dump eval formline local my our reset scalar undef wantarray
-定      傾   執   formline 域    吾 咱  抹    量     消    欲        
+定      傾   執   formline 域    吾 咱  抹    量     消    欲
 
 alarm exec fork getpgrp getppid getpriority kill
-鈴    生   殖   getpgrp getppid getpriority 殺   
+鈴    生   殖   getpgrp getppid getpriority 殺
 
 for
 重
 
 pipe qx/ setpgrp setpriority sleep system times wait waitpid
-管   qx/ setpgrp setpriority 眠    作     計    候   waitpid 
+管   qx/ setpgrp setpriority 眠    作     計    候   waitpid
 
 do no package require use
-為 無 套      必      用  
+為 無 套      必      用
 
 bless dbmclose dbmopen package ref tie tied untie
 祝    dbmclose dbmopen 套      照  纏  縛   解
 
 accept bind connect getpeername getsockname getsockopt listen recv send
-受     縛   連      getpeername getsockname getsockopt 聆     收   送
+受     束   連      getpeername getsockname getsockopt 聆     收   送
 
-setsockopt shutdown sockatmark socket socketpair 
-setsockopt shutdown sockatmark 槽     socketpair 
+setsockopt shutdown sockatmark socket socketpair
+setsockopt shutdown sockatmark 槽     socketpair
 
 msgctl msgget msgrcv msgsnd semctl semget semop shmctl shmget shmread shmwrite
 msgctl msgget msgrcv msgsnd semctl semget semop shmctl shmget shmread shmwrite
@@ -225,23 +244,23 @@ msgctl msgget msgrcv msgsnd semctl semget semop shmctl shmget shmread shmwrite
 endgrent endhostent endnetent endpwent getgrent getgrgid getgrnam
 endgrent endhostent endnetent endpwent getgrent getgrgid getgrnam
 
-getlogin getpwent getpwnam getpwuid setgrent setpwent 
-getlogin getpwent getpwnam getpwuid setgrent setpwent 
+getlogin getpwent getpwnam getpwuid setgrent setpwent
+getlogin getpwent getpwnam getpwuid setgrent setpwent
 
 endprotoent endservent gethostbyaddr gethostbyname
-endprotoent endservent gethostbyaddr gethostbyname 
+endprotoent endservent gethostbyaddr gethostbyname
 
 gethostent getnetbyaddr getnetbyname getnetent
-gethostent getnetbyaddr getnetbyname getnetent 
+gethostent getnetbyaddr getnetbyname getnetent
 
 getprotobyname getprotobynumber getprotoent
-getprotobyname getprotobynumber getprotoent 
+getprotobyname getprotobynumber getprotoent
 
 getservbyname getservbyport getservent sethostent
-getservbyname getservbyport getservent sethostent 
+getservbyname getservbyport getservent sethostent
 
 setnetent setprotoent setservent
-setnetent setprotoent setservent 
+setnetent setprotoent setservent
 
 gmtime localtime time
 準     區        時
