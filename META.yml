@@ -1,5 +1,5 @@
 ---
-abstract: 'Perl in Classical Chinese in Perl'
+abstract: 'Perl in Classical Chinese in Perl - 中書珨'
 author: ~
 build_requires:
   ExtUtils::MakeMaker: 6.42
@@ -7,7 +7,7 @@ configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
 generated_by: 'Module::Install version 0.91'
-license: cc0
+license: CC0
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -20,4 +20,4 @@ no_index:
 requires:
   Filter::Simple::Compile: 0.02
   perl: 5.8.0
-version: 1257305840
+version: 1257340475
