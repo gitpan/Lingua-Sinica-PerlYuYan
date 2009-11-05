@@ -1,5 +1,5 @@
 ---
-abstract: 'Perl in Classical Chinese in Perl - 中書珨'
+abstract: '中書珨 - Perl in Classical Chinese in Perl'
 author: ~
 build_requires:
   ExtUtils::MakeMaker: 6.42
@@ -20,4 +20,4 @@ no_index:
 requires:
   Filter::Simple::Compile: 0.02
   perl: 5.8.0
-version: 1257343877.45504
+version: 1257439830.94865
